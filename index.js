@@ -1,5 +1,6 @@
 const express = require('express');
 const cors = require('cors');
+const usersRouter = require('./routes/users.route');
 
 const app = express();
 const PORT = 3000;
@@ -9,6 +10,9 @@ app.get('/', (req, res) => {
     res.status(200);
     res.send("Hello World");
 });
+
+// Utilisation du routeur des utilisateurs
+app.use('/users', usersRouter);
 
 app.listen(PORT, (error) => {
     if (!error)
