@@ -23,6 +23,12 @@ class UsersService {
             name: user.name,
             id: id
         });
+        const addedUser = this.users.find((user) => user.id === id);
+        if (addedUser) {
+            return addedUser;
+        } else {
+            throw new Error('User not add');
+        }
     };
 }
 

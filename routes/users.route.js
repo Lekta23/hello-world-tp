@@ -31,10 +31,16 @@ router.post('/', (req, res) => {
         const keys = Object.keys(user);
         console.log(`Requête POST reçue pour l'utilisateur ${user.name}`);
         if (user.name && keys.length === 1 && user.name !== '' && typeof user.name === 'string') {
-            // Ajouter l'utilisateur à la liste des utilisateurs
-            usersService.addUser(user);
-            // Renvoyer une réponse 201 Created
-            res.status(201).json(user);
+            try {
+                // Ajouter l'utilisateur à la liste des utilisateurs
+                usersService.addUser(user);
+                // Renvoyer une réponse 201 Created
+                res.status(201).json(user);
+            } catch (error) {
+                res.status(400).json({
+                    error: error.message
+                });
+            }
         } else {
             // Si le nom d'utilisateur n'est pas fourni, renvoyer une erreur 400 Bad Request
             res.status(400).json({
