@@ -7,20 +7,21 @@ const {
 } = require("lodash");
 
 describe("Index", () => {
-    it('Devrait renvoyer "Hello World" sur la route /', async () => {
+    it('Should return "Hello World" on the / route', async () => {
         const response = await request(app).get("/");
         expect(response.status).toBe(200);
         expect(response.text).toBe("Hello World");
     });
 
-    it("Devrait renvoyer une erreur 404 sur une route inexistante", async () => {
-        const response = await request(app).get("/route-inexistante");
+    it("Should return a 404 error on a non-existent route", async () => {
+        const response = await request(app).get("/non-existent-route");
         expect(response.status).toBe(404);
     });
 });
-describe("API Users", () => {
+
+describe("Users API", () => {
     describe("GET /users", () => {
-        it("devrait renvoyer un utilisateur existant avec le code 200", async () => {
+        it("should return an existing user with status code 200", async () => {
             const response = await request(app).get("/users/1");
             expect(response.statusCode).toBe(200);
             expect(response.body).toEqual({
@@ -29,16 +30,17 @@ describe("API Users", () => {
             });
         });
 
-        it("devrait renvoyer une erreur 404 pour un utilisateur non existant", async () => {
-            const response = await request(app).get("/users/999"); // Utilisateur non existant
+        it("should return a 404 error for a non-existent user", async () => {
+            const response = await request(app).get("/users/999"); // Non-existent user
             expect(response.statusCode).toBe(404);
             expect(response.body).toEqual({
                 error: "Utilisateur non trouvé",
             });
         });
     });
+
     describe("POST /users", () => {
-        it('devrait ajouter un utilisateur avec succès', async () => {
+        it('should successfully add a user', async () => {
             const response = await request(app)
                 .post('/users')
                 .send({
@@ -49,7 +51,7 @@ describe("API Users", () => {
             expect(response.body.name).toBe('John Doe');
         });
 
-        it('devrait renvoyer une erreur 400 si le nom d\'utilisateur n\'est pas fourni', async () => {
+        it('should return a 400 error if the username is not provided', async () => {
             const response = await request(app)
                 .post('/users')
                 .send({});
@@ -57,7 +59,8 @@ describe("API Users", () => {
             expect(response.statusCode).toBe(400);
             expect(response.body.error).toBe('Utilisateur non valide');
         });
-        it('devrait renvoyer une erreur 400 si un autre champs en plus de  name est utilisé', async () => {
+
+        it('should return a 400 error if additional fields are used along with name', async () => {
             const response = await request(app)
                 .post('/users')
                 .send({
@@ -69,7 +72,7 @@ describe("API Users", () => {
             expect(response.body.error).toBe('Utilisateur non valide');
         });
 
-        it('devrait renvoyer une erreur 400 si un autre champs que name est utilisé', async () => {
+        it('should return a 400 error if fields other than name are used', async () => {
             const response = await request(app)
                 .post('/users')
                 .send({
@@ -80,7 +83,7 @@ describe("API Users", () => {
             expect(response.body.error).toBe('Utilisateur non valide');
         });
 
-        it('devrait renvoyer une erreur 400 si un chiffre est envoyé', async () => {
+        it('should return a 400 error if a number is sent as the name', async () => {
             const response = await request(app)
                 .post('/users')
                 .send({
@@ -91,7 +94,7 @@ describe("API Users", () => {
             expect(response.body.error).toBe('Utilisateur non valide');
         });
 
-        it('devrait renvoyer une erreur 400 si le name est vide', async () => {
+        it('should return a 400 error if the name is empty', async () => {
             const response = await request(app)
                 .post('/users')
                 .send({
@@ -109,12 +112,12 @@ describe('UsersService', () => {
     let usersService;
 
     beforeEach(() => {
-        // Avant chaque test, réinitialisez l'instance du service utilisateur
+        // Before each test, reset the user service instance
         usersService = new UsersService();
     });
 
     describe('getUserById', () => {
-        it('devrait renvoyer un utilisateur existant par son ID', () => {
+        it('should return an existing user by their ID', () => {
             const user = usersService.getUserById(1);
             expect(user).toEqual({
                 id: 1,
@@ -122,14 +125,14 @@ describe('UsersService', () => {
             });
         });
 
-        it('devrait renvoyer undefined si aucun utilisateur n\'existe avec cet ID', () => {
+        it('should return undefined if no user exists with that ID', () => {
             const user = usersService.getUserById(99);
             expect(user).toBeUndefined();
         });
     });
 
     describe('addUser', () => {
-        it('devrait ajouter un utilisateur avec un ID correctement incrémenté', () => {
+        it('should add a user with a correctly incremented ID', () => {
             const newUser = {
                 name: 'John Doe'
             };
@@ -145,14 +148,13 @@ describe('UsersService', () => {
     });
 });
 
-
 describe("Lodash", () => {
     describe("Chunk", () => {
         beforeEach(() => {
             inputArray = [1, 2, 3, 4, 5, 6, 7];
             chunkSize = 3;
         });
-        it("Devrait diviser un tableau en morceaux de taille donnée", () => {
+        it("Should divide an array into chunks of a given size", () => {
             expect(chunk(inputArray, chunkSize)).toEqual([
                 [1, 2, 3],
                 [4, 5, 6],
@@ -160,63 +162,63 @@ describe("Lodash", () => {
             ]);
         });
 
-        // Cas limite
-        it("Devrait gérer une taille de morceau invalide", () => {
-            chunkSize = -2; // Taille de morceau négative
+        // Edge case
+        it("Should handle an invalid chunk size", () => {
+            chunkSize = -2; // Negative chunk size
             expect(chunk(inputArray, chunkSize)).toEqual([]);
         });
 
-        it("Devrait gérer un tableau vide", () => {
+        it("Should handle an empty array", () => {
             inputArray = [];
             expect(chunk(inputArray, chunkSize)).toEqual([]);
         });
 
-        it("Devrait gérer un tableau vide et une taille de morceau invalide", () => {
+        it("Should handle an empty array and an invalid chunk size", () => {
             inputArray = [];
-            chunkSize = 0; // Taille de morceau nulle
+            chunkSize = 0; // Zero chunk size
             expect(chunk(inputArray, chunkSize)).toEqual([]);
         });
     });
 
-    //MAP
+    // MAP
     describe("Map", () => {
         beforeEach(() => {
             inputArray = [1, 2, 3, 4, 5, 6, 7];
             callback = (x) => x * 2;
         });
-        it("Devrait appliquer la fonction callback à tous les éléments d'un tableau", () => {
+        it("Should apply the callback function to all elements of an array", () => {
             expect(_.map(inputArray, callback)).toEqual([2, 4, 6, 8, 10, 12, 14]);
         });
 
-        it("Devrait gérer un tableau vide", () => {
+        it("Should handle an empty array", () => {
             inputArray = [];
             expect(_.map(inputArray, callback)).toEqual([]);
         });
 
-        it("Devrait gérer une fonction invalide", () => {
+        it("Should handle an invalid function", () => {
             callback = "not a function";
             expect(_.map(inputArray, callback)).toEqual([]);
         });
     });
 
-    //INTERSECTION
+    // INTERSECTION
     describe("Intersection", () => {
         beforeEach(() => {
             inputArray = [2, 3, 4, 5, 6, 7, 8];
             inputArray2 = [1, 2, 3, 4, 5, 6, 7];
         });
-        it("Devrait renvoyer un tableau avec les elements communs aux deux tableaux", () => {
+        it("Should return an array with elements common to both arrays", () => {
             expect(_.intersection(inputArray, inputArray2)).toEqual([
                 2, 3, 4, 5, 6, 7,
             ]);
         });
 
-        it("Devrait gérer un tableau vide", () => {
+        it("Should handle an empty array", () => {
             inputArray = [];
             expect(_.intersection(inputArray, inputArray2)).toEqual([]);
         });
 
-        it("Devrait gérer une fonction invalide", () => {
+        it("Should handle an invalid function", () => {
             inputArray = "not an array";
             expect(_.intersection(inputArray, inputArray2)).toEqual([]);
         });
@@ -232,24 +234,24 @@ describe("Lodash", () => {
             inputArray2 = [1, 2, 3, 4, 5, 6, 7];
         });
 
-        it("Devrait renvoyer un tableau avec tous les éléments des deux tableaux", () => {
+        it("Should return an array with all elements from both arrays", () => {
             expect(_.union(inputArray, inputArray2)).toEqual([
                 2, 3, 4, 5, 6, 7, 8, 1,
             ]);
         });
 
-        it("Devrait gérer un tableau vide", () => {
+        it("Should handle an empty array", () => {
             inputArray = [];
             expect(_.union(inputArray, inputArray2)).toEqual(inputArray2);
         });
 
-        it("Devrait gérer une fonction invalide", () => {
+        it("Should handle an invalid function", () => {
             inputArray = "not an array";
             expect(_.union(inputArray, inputArray2)).toEqual(inputArray2);
         });
     });
 
-    //FLAT MAP
+    // FLAT MAP
     describe("FlatMap", () => {
         let inputArray;
         let callback;
@@ -259,24 +261,24 @@ describe("Lodash", () => {
             callback = (x) => [x, x];
         });
 
-        it("Devrait appliquer la fonction callback à tous les éléments d'un tableau et aplatir le résultat", () => {
+        it("Should apply the callback function to all elements of an array and flatten the result", () => {
             expect(_.flatMap(inputArray, callback)).toEqual([
                 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7,
             ]);
         });
 
-        it("Devrait gérer un tableau vide", () => {
+        it("Should handle an empty array", () => {
             inputArray = [];
             expect(_.flatMap(inputArray, callback)).toEqual([]);
         });
 
-        it("Devrait gérer une fonction invalide", () => {
+        it("Should handle an invalid function", () => {
             callback = "not a function";
             expect(_.flatMap(inputArray, callback)).toEqual([]);
         });
     });
 
-    //MAX
+    // MAX
     describe("Max", () => {
         let inputArray;
 
@@ -284,43 +286,40 @@ describe("Lodash", () => {
             inputArray = [1, 2, 3, 99, 5, 6, 7];
         });
 
-        it("Devrait renvoyer la valeur maximale d'un tableau", () => {
+        it("Should return the maximum value of an array", () => {
             expect(_.max(inputArray)).toEqual(99);
         });
 
-        it("Devrait gérer un tableau vide", () => {
+        it("Should handle an empty array", () => {
             inputArray = [];
             expect(_.max(inputArray)).toEqual(undefined);
         });
 
-        it("Devrait gérer une fonction invalide", () => {
-            inputArray = "not z an array";
-            expect(_.max(inputArray)).toEqual("z");
+        it("Should handle an invalid function", () => {
+            inputArray = "not an array";
+            expect(_.max(inputArray)).toEqual("y");
         });
 
-        it("Devrait gérer un tableau de chaînes de caractères", () => {
+        it("Should handle an array of strings", () => {
             inputArray = ["a", "b", "c", 4];
             expect(_.max(inputArray)).toEqual("c");
         });
     });
 
-    //MAX BY
+    // MAX BY
     describe("MaxBy", () => {
-        // Cas nominal
-        it("Devrait renvoyer l'élément avec la plus grande valeur de la propriété spécifiée", () => {
+        // Nominal case
+        it("Should return the element with the highest value of the specified property", () => {
             const inputArray = [{
-                    name: "Alice",
-                    age: 30
-                },
-                {
-                    name: "Bob",
-                    age: 25
-                },
-                {
-                    name: "Charlie",
-                    age: 35
-                },
-            ];
+                name: "Alice",
+                age: 30
+            }, {
+                name: "Bob",
+                age: 25
+            }, {
+                name: "Charlie",
+                age: 35
+            }, ];
 
             const result = _.maxBy(inputArray, "age");
             expect(result).toEqual({
@@ -329,46 +328,40 @@ describe("Lodash", () => {
             });
         });
 
-        // Cas limite
-        it("Devrait renvoyer undefined pour un tableau vide", () => {
+        // Edge case
+        it("Should return undefined for an empty array", () => {
             const inputArray = [];
             const result = _.maxBy(inputArray, "age");
             expect(result).toBeUndefined();
         });
 
-        it("Devrait renvoyer undefined si la propriété spécifiée n'existe pas dans les objets du tableau", () => {
+        it("Should return undefined if the specified property does not exist in the objects of the array", () => {
             const inputArray = [{
-                    name: "Alice",
-                    height: 160
-                },
-                {
-                    name: "Bob",
-                    height: 175
-                },
-                {
-                    name: "Charlie",
-                    height: 150
-                },
-            ];
+                name: "Alice",
+                height: 160
+            }, {
+                name: "Bob",
+                height: 175
+            }, {
+                name: "Charlie",
+                height: 150
+            }, ];
 
-            const result = _.maxBy(inputArray, "age"); // La propriété 'age' n'existe pas
+            const result = _.maxBy(inputArray, "age"); // The 'age' property does not exist
             expect(result).toBeUndefined();
         });
 
-        it("Devrait renvoyer le premier élément si plusieurs éléments ont la même valeur maximale", () => {
+        it("Should return the first element if multiple elements have the same maximum value", () => {
             const inputArray = [{
-                    name: "Alice",
-                    age: 30
-                },
-                {
-                    name: "Bob",
-                    age: 35
-                },
-                {
-                    name: "Charlie",
-                    age: 35
-                },
-            ];
+                name: "Alice",
+                age: 30
+            }, {
+                name: "Bob",
+                age: 35
+            }, {
+                name: "Charlie",
+                age: 35
+            }, ];
 
             const result = _.maxBy(inputArray, "age");
             expect(result).toEqual({
