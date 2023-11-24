@@ -17,6 +17,14 @@ class UsersService {
         return this.users.find((user) => user.id === id);
     }
 
+    addUser(user) {
+        const id = this.users.length + 1;
+        this.users.push({
+            name: user.name,
+            id: id
+        });
+    };
 }
 
-module.exports = new UsersService();
+
+module.exports = UsersService;
