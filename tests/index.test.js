@@ -114,7 +114,6 @@ describe('UsersService', () => {
     let usersService;
 
     beforeEach(() => {
-        // Before each test, reset the user service instance
         usersService = new UsersService();
     });
 
@@ -140,9 +139,10 @@ describe('UsersService', () => {
             };
 
             usersService.addUser(newUser);
+            const listUsers = usersService.getUsers();
 
-            expect(usersService.users.length).toBe(4);
-            expect(usersService.users[3]).toEqual({
+            expect(listUsers.length).toBe(4);
+            expect(listUsers[3]).toEqual({
                 id: 4,
                 name: 'John Doe'
             });

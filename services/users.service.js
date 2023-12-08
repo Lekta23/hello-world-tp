@@ -1,29 +1,23 @@
+const UsersRepository = require("../repos/users.repository");
+
 class UsersService {
-    users = [{
-            id: 1,
-            name: 'Cindy'
-        },
-        {
-            id: 2,
-            name: 'Mario'
-        },
-        {
-            id: 3,
-            name: 'Karl'
-        }
-    ];
+    usersRepository = new UsersRepository();
 
     getUserById(id) {
-        return this.users.find((user) => user.id === id);
+        return this.usersRepository.listUsers.find((user) => user.id === id);
+    }
+
+    getUsers() {
+        return this.usersRepository.listUsers;
     }
 
     addUser(user) {
-        const id = this.users.length + 1;
-        this.users.push({
+        const id = this.usersRepository.listUsers.length + 1;
+        this.usersRepository.listUsers.push({
             name: user.name,
             id: id
         });
-        const addedUser = this.users.find((user) => user.id === id);
+        const addedUser = this.usersRepository.listUsers.find((user) => user.id === id);
         if (addedUser) {
             return addedUser;
         } else {
